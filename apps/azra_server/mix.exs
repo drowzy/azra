@@ -27,7 +27,9 @@ defmodule AzraServer.Mixfile do
   defp deps do
     [
       {:poison, "~> 3.0"},
-      {:grpc, github: "tony612/grpc-elixir"}
+      {:gen_stage, "~> 0.11"},
+      {:grpc, github: "tony612/grpc-elixir"},
+      {:azra_receiver, in_umbrella: true}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       # {:sibling_app_in_umbrella, in_umbrella: true},
