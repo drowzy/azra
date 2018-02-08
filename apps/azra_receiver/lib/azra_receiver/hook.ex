@@ -2,17 +2,19 @@ defmodule AzraReceiver.Hook do
   require Logger
 
   alias AzraReceiver.Handler.Helpers
+  alias AzraReceiver.Hook.PushEvent
 
   def init(req, state), do: handle(req, state)
 
   def handle(%{method: "POST"} = req, state) do
-    Logger.info("Received hook #{:cowboy_req.uri(req)}")
-
     {body, req} = Helpers.decode_body(req)
-    {result, req} = respond(req, 200, body)
 
+    event = PushEvent.new(body)
+
+    Logger.info("Hook triggered #{:cowboy_req.uri(req)}\n#{PushEvent.pretty_print(event)}")
+
+    {result, req} = respond(req, 200, PushEvent.as_docker_hub(event))
     {result, req, state}
-
   end
 
   def handle(req, state) do
