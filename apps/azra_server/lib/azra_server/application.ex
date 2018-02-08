@@ -1,7 +1,9 @@
 defmodule AzraServer.Application do
-  @moduledoc """
+  @moduledoc
+  """
   Application
-    """
+  """
+
   use Application
 
   def start(_type, _args) do

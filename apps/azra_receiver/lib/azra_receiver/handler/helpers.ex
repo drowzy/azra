@@ -16,6 +16,7 @@ defmodule AzraReceiver.Handler.Helpers do
     case Poison.decode(body) do
       {:ok, decoded_value} ->
         decoded_value
+
       _ ->
         %{}
     end
