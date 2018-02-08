@@ -1,9 +1,4 @@
 defmodule AzraServer.Application do
-  @moduledoc
-  """
-  Application
-  """
-
   use Application
 
   def start(_type, _args) do
@@ -11,6 +6,8 @@ defmodule AzraServer.Application do
 
     children = [
       # worker(AzraServer.HookReceiver, [[]]),
+      worker(AzraServer.Producer, [[key: "test"]]),
+      worker(AzraServer.Consumer, [])
     ]
 
     opts = [strategy: :one_for_one, name: AzraServer.Supervisor]

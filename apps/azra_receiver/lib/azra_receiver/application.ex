@@ -24,7 +24,8 @@ defmodule AzraReceiver.Application do
     :cowboy_router.compile([
       {:_,
        [
-         {"/hook", AzraReceiver.Hook, %{cb: &AzraReceiver.Dispatcher.dispatch/3, key: "test"}}
+         {"/hook", AzraReceiver.Hook,
+          %{cb: &AzraReceiver.Dispatcher.dispatch/3, key: "test"}}
        ]}
     ])
   end

@@ -1,5 +1,6 @@
 defmodule AzraReceiver do
   alias AzraReceiver.Dispatcher
+
   @moduledoc """
   Documentation for AzraReceiver.
   """
