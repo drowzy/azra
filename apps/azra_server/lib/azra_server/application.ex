@@ -7,7 +7,6 @@ defmodule AzraServer.Application do
     children = [
       # worker(AzraServer.HookReceiver, [[]]),
       worker(AzraServer.Producer, [[key: "test"]]),
-      worker(AzraServer.Consumer, [])
     ]
 
     opts = [strategy: :one_for_one, name: AzraServer.Supervisor]
