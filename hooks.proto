@@ -11,36 +11,5 @@ message Route {
 }
 
 message AzureHook {
-  message Target {
-    string mediaType = 1;
-    int32 size = 2;
-    string repository = 3;
-    string tag = 4;
-  }
-
-  message Request {
-    enum Method {
-      UNKNOWN = 0;
-      GET = 1;
-      POST = 2;
-      PUT = 3;
-      DELETE = 4;
-    }
-    string id = 1;
-    string host = 2;
-    Method method = 3;
-    string useragent = 4;
-  }
-
-  enum Action {
-    UNKNOWN = 0;
-    PUSH = 1;
-    DELETE = 2;
-  }
-
-  string id = 1;
-  string timestamp = 2;
-  Action action = 3;
-  Target target = 4;
-  Request request = 5;
+  string message = 1;
 }
