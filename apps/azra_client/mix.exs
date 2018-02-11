@@ -1,9 +1,9 @@
-defmodule AzraReceiver.Mixfile do
+defmodule AzraClient.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :azra_receiver,
+      app: :azra_client,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -18,17 +18,14 @@ defmodule AzraReceiver.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {AzraReceiver.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:cowboy, "~> 2.2.0"},
-      {:exconstructor, "~> 1.1.0"},
-      {:plug, github: "elixir-plug/plug"},
+      {:grpc, github: "tony612/grpc-elixir"},
       {:poison, "~> 3.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
