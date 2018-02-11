@@ -1,5 +1,6 @@
 defmodule AzraClient.Consumer do
   use GenServer
+  require Logger
 
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
@@ -25,14 +26,13 @@ defmodule AzraClient.Consumer do
       ) do
     req = AzraServer.Route.new(provider: provider)
 
-    channel
-    |> AzraServer.AzraHook.Stub.receive_hook(req)
-    |> Task.async_stream(fn t ->
-      IO.inspect(t)
-      dispatcher.(t)
-    end)
-    |> Stream.run()
+    Logger.info("Requesting Hook stream with provider #{provider}")
 
-    {:noreply, state, state}
+    :ok = channel
+      |> AzraServer.AzraHook.Stub.receive_hook(req)
+      |> Task.async_stream(&(dispatcher.(&1)))
+      |> Stream.run()
+
+    {:noreply, state}
   end
 end
