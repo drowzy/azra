@@ -1,0 +1,16 @@
+FROM elixir:1.6-alpine
+
+WORKDIR /app
+
+ADD mix.exs /app
+ADD mix.lock /
+RUN mix local.hex --force && \
+    mix local.rebar --force && \
+    mix deps.get && \
+    mix deps.compile
+
+ARG MIX_ENV=prod
+
+COPY . ./
+RUN mix compile --env=prod && \
+    mix release --env=prod
