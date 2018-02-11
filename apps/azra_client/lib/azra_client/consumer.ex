@@ -8,7 +8,10 @@ defmodule AzraClient.Consumer do
 
   def init(opts) do
     channel = Keyword.get(opts, :channel, nil)
+    provider = Keyword.get(opts, :provider, nil)
     dispatcher = Keyword.get(opts, :dispatcher, fn args -> args end)
+
+    Process.send_after(self(), {:consume_hook, provider}, 0)
 
     {:ok,
      %{
@@ -17,22 +20,17 @@ defmodule AzraClient.Consumer do
      }}
   end
 
-  def receive_stream(pid, provider),
-    do: GenServer.cast(pid, {:receive_stream, provider})
-
-  def handle_cast(
-        {:receive_stream, provider},
-        %{channel: channel, dispatcher: dispatcher} = state
-      ) do
-    req = AzraServer.Route.new(provider: provider)
-
-    Logger.info("Requesting Hook stream with provider #{provider}")
-
-    :ok = channel
-      |> AzraServer.AzraHook.Stub.receive_hook(req)
-      |> Task.async_stream(&(dispatcher.(&1)))
-      |> Stream.run()
+  def handle_info({:consume_hook, provider}, %{channel: channel, dispatcher: dispatcher} = state) do
+    Logger.info("Recv on channel #{inspect(channel)} with #{provider}")
+    :ok = recv(channel, AzraServer.Route.new(provider: provider), dispatcher)
 
     {:noreply, state}
+  end
+
+  defp recv(channel, req, dispatcher) do
+    channel
+    |> AzraServer.AzraHook.Stub.receive_hook(req)
+    |> Task.async_stream(&(dispatcher.(&1)))
+    |> Stream.run()
   end
 end

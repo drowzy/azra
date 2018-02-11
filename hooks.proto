@@ -3,7 +3,7 @@ syntax = "proto3";
 package azra_server;
 
 service AzraHook {
-    rpc ReceiveHook(Route) returns (stream AzureHook) {}
+  rpc ReceiveHook(Route) returns (stream AzureHook) {}
 }
 
 message Route {
