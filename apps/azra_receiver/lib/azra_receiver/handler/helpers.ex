@@ -4,8 +4,7 @@ defmodule AzraReceiver.Handler.Helpers do
     :cowboy_req.set_resp_body(body, req)
   end
 
-  def set_headers(req, headers \\ %{}),
-    do: :cowboy_req.set_resp_headers(headers, req)
+  def set_headers(req, headers \\ %{}), do: :cowboy_req.set_resp_headers(headers, req)
 
   def decode_body(req) do
     {:ok, body, req} = :cowboy_req.read_body(req)

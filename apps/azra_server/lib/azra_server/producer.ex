@@ -26,7 +26,6 @@ defmodule AzraServer.Producer do
       ) do
     {events, new_events} = Enum.split([event | events], demand)
 
-    {:noreply, events,
-     %{state | events: new_events, demand: demand - length(events)}}
+    {:noreply, events, %{state | events: new_events, demand: demand - length(events)}}
   end
 end

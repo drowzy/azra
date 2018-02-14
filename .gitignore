@@ -20,3 +20,5 @@ erl_crash.dump
 *.ez
 # Log directory
 /log/
+# env files
+.env

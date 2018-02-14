@@ -22,13 +22,10 @@ defmodule AzraReceiver.Hook.PushEvent do
           request: request
         } = event
       ) do
-    "#{timestamp} :: Action: #{String.upcase(action)} -> #{full_name(event)}}\nUser-Agent :: #{
-      request["useragent"]
-    }\nType :: #{target["mediaType"]}\nDigest :: #{target["digest"]} -> #{
-      target["size"]
-    }"
+    "#{timestamp} :: Action: #{String.upcase(action)} -> #{full_name(event)}}\nUser-Agent :: #{request["useragent"]}\nType :: #{
+      target["mediaType"]
+    }\nDigest :: #{target["digest"]} -> #{target["size"]}"
   end
 
-  defp full_name(%__MODULE__{request: request, target: target}),
-    do: "#{request["host"]}/#{target["repository"]}"
+  defp full_name(%__MODULE__{request: request, target: target}), do: "#{request["host"]}/#{target["repository"]}"
 end

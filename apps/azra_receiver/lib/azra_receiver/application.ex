@@ -8,7 +8,7 @@ defmodule AzraReceiver.Application do
     import Supervisor.Spec, warn: false
 
     {:ok, _} =
-      :cowboy.start_clear(:http_listener, [port: 8080], %{
+      :cowboy.start_clear(:http_listener, [port: 6060], %{
         env: %{dispatch: router_config()}
       })
 
@@ -24,8 +24,7 @@ defmodule AzraReceiver.Application do
     :cowboy_router.compile([
       {:_,
        [
-         {"/hook", AzraReceiver.Hook,
-          %{cb: &AzraReceiver.Dispatcher.dispatch/3, key: "test"}}
+         {"/hook", AzraReceiver.Hook, %{cb: &AzraReceiver.Dispatcher.dispatch/3, key: "test"}}
        ]}
     ])
   end

@@ -30,7 +30,7 @@ defmodule AzraClient.Consumer do
   defp recv(channel, req, dispatcher) do
     channel
     |> AzraServer.AzraHook.Stub.receive_hook(req)
-    |> Task.async_stream(&(dispatcher.(&1)))
+    |> Task.async_stream(&dispatcher.(&1))
     |> Stream.run()
   end
 end

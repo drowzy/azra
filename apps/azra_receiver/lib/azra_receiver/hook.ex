@@ -11,9 +11,7 @@ defmodule AzraReceiver.Hook do
 
     event = PushEvent.new(body)
 
-    Logger.info(
-      "Hook triggered #{:cowboy_req.uri(req)}\n#{PushEvent.pretty_print(event)}"
-    )
+    Logger.info("Hook triggered #{:cowboy_req.uri(req)}\n#{PushEvent.pretty_print(event)}")
 
     _ = dispatch.(key, :push_event, event)
     {result, req} = respond(req, 200, PushEvent.as_docker_hub(event))
@@ -21,11 +19,7 @@ defmodule AzraReceiver.Hook do
   end
 
   def handle(req, state) do
-    Logger.info(
-      "Received unsupported method #{:cowboy_req.method(req)} -> #{
-        inspect(:cowboy_req.headers(req))
-      }"
-    )
+    Logger.info("Received unsupported method #{:cowboy_req.method(req)} -> #{inspect(:cowboy_req.headers(req))}")
 
     {result, req} =
       respond(req, 418, %{
