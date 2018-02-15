@@ -23,6 +23,9 @@ defmodule AzraClient.Rancher do
       }
     end
 
+    def match?(%__MODULE__{selectors: selectors}, selector),
+      do: Enum.any?(selectors, &(&1 == selector))
+
     defp parse_selector(nil), do: %{}
     defp parse_selector(selector), do: selector
   end
@@ -52,19 +55,53 @@ defmodule AzraClient.Rancher do
      }}
   end
 
+  def match_on(pid, selector) do
+    GenServer.call(pid, {:recievers_matching, selector})
+  end
+
+  def exec_match(pid, selector, data) do
+    GenServer.call(pid, {:exec_match, selector, data})
+  end
+
+  def handle_call({:exec_match, _match}, _from, %{receivers: []} = state), do: {:reply, [], state}
+
+  def handle_call({:exec_match, selector, data}, _from, %{receivers: receivers} = state) do
+    res =
+      case find_match(receivers, selector) do
+        [] ->
+          []
+
+        matches ->
+          matches
+          |> Task.async_stream(fn %Receiver{id: id, url: url} ->
+            Logger.info("Executing hook to receiver id: #{id} -> #{url} #{inspect(data)}")
+            Client.post_raw(url, data)
+          end)
+          |> Enum.map(fn res -> res end)
+      end
+
+    {:reply, res, state}
+  end
+
+  def handle_call({:recievers_matching, selector}, _from, %{receivers: receivers} = state),
+    do: {:reply, find_match(receivers, selector), state}
+
   def handle_info(:fetch_receivers, %{client: client} = state) do
+    Process.send_after(self(), :fetch_receivers, state.fetch_interval)
+
     case Client.fetch_receivers(client, state.rancher_project) do
       {:ok, %Tesla.Env{body: body}} ->
-        Logger.info("Req: Ok -> #{inspect(parse_response(body))}")
+        Logger.info("Req: Ok -> #{inspect(body)}")
+
+        {:noreply, %{state | receivers: parse_response(body)}}
 
       {:error, error} ->
         Logger.error("Req: Error -> #{inspect(error)}")
+
+        {:noreply, state}
     end
-
-    Process.send_after(self(), :fetch_receivers, state.fetch_interval)
-
-    {:noreply, state}
   end
 
   defp parse_response(%{"data" => data}), do: Enum.map(data, &Receiver.new/1)
+  defp find_match(receivers, match), do: Enum.filter(receivers, &Receiver.match?(&1, match))
 end
