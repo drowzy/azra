@@ -28,3 +28,16 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+config :azra_client,
+  rancher: %{
+    project: {:system, "AZRA_RANCHER_PROJECT", ""},
+    url: {:system, "AZRA_RANCHER_URL", ""},
+    access_key: {:system, "AZRA_RANCHER_ACCESS_KEY", ""},
+    secret: {:system, "AZRA_RANCHER_SECRET", ""}
+  }
+
+config :azra_client,
+  server: %{
+    url: {:system, "AZRA_SERVER", "localhost:50051"},
+    provider: {:system, "AZRA_PROVIDER", "azure"}
+  }

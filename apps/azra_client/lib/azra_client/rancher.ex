@@ -63,12 +63,13 @@ defmodule AzraClient.Rancher do
 
     case Client.fetch_receivers(client, state.rancher_project) do
       {:ok, %Tesla.Env{body: body}} ->
-        Logger.info("Req: Ok -> #{inspect(body)}")
+        receivers = parse_response(body)
+        Logger.info("Sync receivers :: Ok -> Setting #{length(receivers)} receivers")
 
-        {:noreply, %{state | receivers: parse_response(body)}}
+        {:noreply, %{state | receivers: receivers}}
 
       {:error, error} ->
-        Logger.error("Req: Error -> #{inspect(error)}")
+        Logger.error("Sync receivers :: Error -> #{inspect(error)}")
 
         {:noreply, state}
     end
