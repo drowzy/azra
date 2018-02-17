@@ -5,8 +5,8 @@ defmodule AzraServer.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      # worker(AzraServer.HookReceiver, [[]]),
-      worker(AzraServer.Producer, [[key: "test"]]),
+      supervisor(AzraReceiver, [[port: 6060, url_base: "hook", key: "registry_push"]]),
+      worker(AzraServer.Producer, [[key: "registry_push"]]),
       supervisor(GRPC.Server.Supervisor, [{AzraServer.Hooks.Server, 50051}])
     ]
 

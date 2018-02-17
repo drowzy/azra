@@ -19,7 +19,7 @@ defmodule AzraReceiver.Mixfile do
   def application do
     [
       extra_applications: [:logger],
-      mod: {AzraReceiver.Application, []}
+      mod: []
     ]
   end
 
