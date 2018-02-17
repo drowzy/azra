@@ -41,6 +41,7 @@ defmodule AzraClient.Rancher do
     res =
       case find_match(receivers, selector) do
         [] ->
+          Logger.info("No matches for selector #{inspect(selector)}")
           []
 
         matches ->

@@ -8,8 +8,7 @@ defmodule AzraClient.Rancher.Client do
     get(client, "/v1-webhooks/receivers?limit=-1&projectId=#{project_id}")
   end
 
-  def post_raw(url, data),
-    do: Tesla.post(url, Poison.encode!(data), headers: %{"Content-Type" => "application/json"})
+  def post_raw(url, data), do: Tesla.post(url, Poison.encode!(data), headers: %{"Content-Type" => "application/json"})
 
   def client(base_url, {access_key, secret}) do
     Tesla.build_client([

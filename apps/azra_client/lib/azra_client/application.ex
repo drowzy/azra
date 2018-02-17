@@ -1,10 +1,11 @@
 defmodule AzraClient.Application do
   use Application
+  require Logger
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    {:ok, %{project: rancher_project, url: rancher_url, access_key: ak, secret: secret}} =
+    {:ok, %{project: rancher_project, url: rancher_url, access_key: ak, secret: secret, selector_key: selector_key}} =
       Confex.fetch_env(:azra_client, :rancher)
 
     {:ok, %{url: server_url, provider: provider}} = Confex.fetch_env(:azra_client, :server)
@@ -15,7 +16,7 @@ defmodule AzraClient.Application do
       worker(AzraClient.Consumer, [
         [
           channel: channel,
-          dispatcher: &dispatch/1,
+          dispatcher: AzraClient.Handler.make_handler(selector_key),
           provider: provider
         ]
       ]),
@@ -30,10 +31,6 @@ defmodule AzraClient.Application do
 
     opts = [strategy: :one_for_one, name: AzraClient.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  def dispatch(event) do
-    IO.puts("In Logger fn #{inspect(event)}")
   end
 
   defp connect(hostname, opts), do: GRPC.Stub.connect(hostname, opts)

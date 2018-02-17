@@ -33,6 +33,7 @@ config :azra_client,
     project: {:system, "AZRA_RANCHER_PROJECT", ""},
     url: {:system, "AZRA_RANCHER_URL", ""},
     access_key: {:system, "AZRA_RANCHER_ACCESS_KEY", ""},
+    selector_key: {:system, "AZRA_RANCHER_SELECTOR", "image"},
     secret: {:system, "AZRA_RANCHER_SECRET", ""}
   }
 

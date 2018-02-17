@@ -19,8 +19,7 @@ defmodule AzraClient.Rancher.Receiver do
     }
   end
 
-  def match?(%__MODULE__{selectors: selectors}, selector),
-    do: Enum.any?(selectors, &(&1 == selector))
+  def match?(%__MODULE__{selectors: selectors}, selector), do: Enum.any?(selectors, &(&1 == selector))
 
   defp parse_selector(nil), do: %{}
   defp parse_selector(selector), do: selector

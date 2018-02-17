@@ -7,13 +7,6 @@ defmodule AzraReceiver.Hook.PushEvent do
 
   use ExConstructor
 
-  def as_docker_hub(%__MODULE__{request: request, target: target} = event) do
-    push_data = Map.put(%{}, "tag", target["tag"])
-    repository = Map.put(%{}, "repo_name", full_name(event))
-
-    %{"push_data" => push_data, "repository" => repository}
-  end
-
   def pretty_print(
         %__MODULE__{
           timestamp: timestamp,

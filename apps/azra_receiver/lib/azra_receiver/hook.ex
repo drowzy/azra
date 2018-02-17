@@ -14,7 +14,7 @@ defmodule AzraReceiver.Hook do
     Logger.info("Hook triggered #{:cowboy_req.uri(req)}\n#{PushEvent.pretty_print(event)}")
 
     _ = dispatch.(key, :push_event, event)
-    {result, req} = respond(req, 200, PushEvent.as_docker_hub(event))
+    {result, req} = respond(req, 200, %{"message" => "ok"})
     {result, req, state}
   end
 
