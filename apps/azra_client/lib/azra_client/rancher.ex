@@ -4,6 +4,9 @@ defmodule AzraClient.Rancher do
 
   use GenServer
 
+  @rate_limit_scale 10_000
+  @rate_limit_limit 1
+
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
@@ -46,11 +49,13 @@ defmodule AzraClient.Rancher do
 
         matches ->
           matches
+          |> Enum.map(&check_rate_limit/1)
+          |> (&for({:ok, rec} <- &1, do: rec)).()
           |> Task.async_stream(fn %Receiver{id: id, url: url} ->
             Logger.info("Executing hook to receiver id: #{id} -> #{url} #{inspect(data)}")
             Client.post_raw(url, data)
           end)
-          |> Enum.map(fn res -> res end)
+          |> Enum.map(& &1)
       end
 
     {:reply, res, state}
@@ -74,6 +79,11 @@ defmodule AzraClient.Rancher do
 
         {:noreply, state}
     end
+  end
+
+  defp check_rate_limit(%Receiver{url: url} = rec) do
+    {status, _} = ExRated.check_rate(url, @rate_limit_scale, @rate_limit_limit)
+    {status, rec}
   end
 
   defp parse_response(%{"data" => data}), do: Enum.map(data, &Receiver.new/1)
