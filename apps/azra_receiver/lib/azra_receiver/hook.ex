@@ -9,11 +9,9 @@ defmodule AzraReceiver.Hook do
   def handle(%{method: "POST"} = req, %{cb: dispatch, key: key} = state) do
     {body, req} = Helpers.decode_body(req)
 
-    event = PushEvent.new(body)
+    Logger.info("Hook triggered #{:cowboy_req.uri(req)}")
 
-    Logger.info("Hook triggered #{:cowboy_req.uri(req)}\n#{PushEvent.pretty_print(event)}")
-
-    _ = dispatch.(key, :push_event, event)
+    _ = dispatch.(key, :push_event, body)
     {result, req} = respond(req, 200, %{"message" => "ok"})
     {result, req, state}
   end

@@ -1,13 +1,23 @@
 defmodule AzraClient.Handler do
   require Logger
-  def make_handler(key), do: &dispatch(key, &1)
+  def make_handler(key, decode?), do: &dispatch(key, &1, decode?)
 
-  def dispatch(key, event) do
+  def dispatch(key, event, true) do
     data =
       event.message
       |> Poison.decode!()
       |> as_docker
 
+
+    do_dispatch(key, data)
+  end
+
+  def dispatch(key, event, _decode?) do
+    do_dispatch(key, as_docker(event.message))
+  end
+
+
+  defp do_dispatch(key, data) do
     value = Kernel.get_in(data, ["repository", "repo_name"])
 
     AzraClient.Rancher.exec_match(AzraClient.Rancher, {key, value}, data)
@@ -24,5 +34,5 @@ defmodule AzraClient.Handler do
     }
   end
 
-  defp as_docker(event), do: %{}
+  defp as_docker(_event), do: %{}
 end

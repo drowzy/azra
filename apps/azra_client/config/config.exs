@@ -34,11 +34,17 @@ config :azra_client,
     url: {:system, "AZRA_RANCHER_URL", ""},
     access_key: {:system, "AZRA_RANCHER_ACCESS_KEY", ""},
     selector_key: {:system, "AZRA_RANCHER_SELECTOR", "image"},
-    secret: {:system, "AZRA_RANCHER_SECRET", ""}
+    secret: {:system, "AZRA_RANCHER_SECRET", ""},
+    mode: {:system, "AZRA_CLIENT_MODE", "mixed"}
   }
 
 config :azra_client,
   server: %{
     url: {:system, "AZRA_SERVER", "localhost:50051"},
     provider: {:system, "AZRA_PROVIDER", "azure"}
+  }
+
+config :azra_client,
+  client: %{
+    receiver_port: {:system, "AZRA_RECEIVER_PORT", 6060}
   }
