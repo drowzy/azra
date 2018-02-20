@@ -1,5 +1,7 @@
 FROM elixir:1.6-alpine
 
+RUN apk add --no-cache git
+
 WORKDIR /app
 
 ADD mix.exs /app
@@ -13,4 +15,17 @@ ARG MIX_ENV=prod
 
 COPY . ./
 RUN mix compile --env=prod && \
-    mix release --env=prod
+    mix release --env=prod --name=azra_bridge_server
+
+FROM alpine
+RUN apk add --no-cache ncurses-libs libcrypto1.0 bash
+RUN mkdir -p /app /tmp
+
+WORKDIR /app
+
+COPY --from=0 /app/_build/prod/ ./
+
+EXPOSE 4400
+ENV REPLACE_OS_VARS true
+
+CMD ["./rel/azra_bridge_server/bin/azra_bridge_server", "foreground"]

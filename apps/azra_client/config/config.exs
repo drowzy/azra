@@ -46,5 +46,5 @@ config :azra_client,
 
 config :azra_client,
   client: %{
-    receiver_port: {:system, "AZRA_RECEIVER_PORT", 6060}
+    receiver_port: {:system, "AZRA_RECEIVER_PORT", 4000}
   }

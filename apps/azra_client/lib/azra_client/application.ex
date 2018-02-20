@@ -30,8 +30,10 @@ defmodule AzraClient.Application do
     dispatch_key = "registry_push"
 
     [
-      Supervisor.Spec.supervisor(AzraReceiver, [[port: 6060, url_base: "hook", key: dispatch_key]]),
-      Supervisor.Spec.worker(AzraClient.Receiver, [[key: dispatch_key, dispatcher: AzraClient.Handler.make_handler(key, false) ]])
+      Supervisor.Spec.supervisor(AzraReceiver, [[port: 4000, url_base: "hook", key: dispatch_key]]),
+      Supervisor.Spec.worker(AzraClient.Receiver, [
+        [key: dispatch_key, dispatcher: AzraClient.Handler.make_handler(key, false)]
+      ])
     ]
   end
 

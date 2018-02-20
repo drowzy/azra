@@ -1,5 +1,6 @@
 defmodule AzraReceiver do
   alias AzraReceiver.Dispatcher
+  require Logger
 
   use Supervisor
 
@@ -16,6 +17,8 @@ defmodule AzraReceiver do
       :cowboy.start_clear(:http_listener, [port: port], %{
         env: %{dispatch: router_config(url_base, subscription_key)}
       })
+
+    Logger.info("Started Hook relay on port #{port}")
 
     children = [
       {Registry, keys: :duplicate, name: AzraReceiver.Registry}

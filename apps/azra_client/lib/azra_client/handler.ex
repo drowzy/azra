@@ -8,14 +8,12 @@ defmodule AzraClient.Handler do
       |> Poison.decode!()
       |> as_docker
 
-
     do_dispatch(key, data)
   end
 
   def dispatch(key, event, _decode?) do
     do_dispatch(key, as_docker(event.message))
   end
-
 
   defp do_dispatch(key, data) do
     value = Kernel.get_in(data, ["repository", "repo_name"])

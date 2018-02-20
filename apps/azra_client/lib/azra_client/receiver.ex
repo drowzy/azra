@@ -15,7 +15,7 @@ defmodule AzraClient.Receiver do
   end
 
   def handle_info({:push_event, event}, %{dispatcher: dispatch} = state) do
-    _res = dispatch.(%{message: event })
+    _res = dispatch.(%{message: event})
     {:noreply, state}
   end
 end
