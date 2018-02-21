@@ -2,7 +2,6 @@ defmodule AzraReceiver.Hook do
   require Logger
 
   alias AzraReceiver.Handler.Helpers
-  alias AzraReceiver.Hook.PushEvent
 
   def init(req, state), do: handle(req, state)
 

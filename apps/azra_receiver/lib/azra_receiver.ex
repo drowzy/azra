@@ -13,15 +13,18 @@ defmodule AzraReceiver do
     url_base = Keyword.get(args, :url_base, "hook")
     subscription_key = Keyword.get(args, :key, "key")
 
-    {:ok, _} =
-      :cowboy.start_clear(:http_listener, [port: port], %{
-        env: %{dispatch: router_config(url_base, subscription_key)}
-      })
-
     Logger.info("Started Hook relay on port #{port}")
 
     children = [
-      {Registry, keys: :duplicate, name: AzraReceiver.Registry}
+      {Registry, keys: :duplicate, name: AzraReceiver.Registry},
+      %{
+        id: :cowboy,
+        start: {
+          :cowboy,
+          :start_clear,
+          [:http_listener, [port: port], %{env: %{dispatch: router_config(url_base, subscription_key)}}]
+        }
+      }
     ]
 
     opts = [strategy: :one_for_one, name: AzraReceiver.Supervisor]
